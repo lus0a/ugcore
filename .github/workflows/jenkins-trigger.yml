@@ -1,5 +1,4 @@
-name: jenkins-CI
-
+name: Trigger Jenkins CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
@@ -23,3 +22,4 @@ jobs:
           username: ${{ secrets.JENKINS_USER }}
           api_token: ${{ secrets.JENKINS_TOKEN }}
           timeout: "3600"
+          interval: "300"
