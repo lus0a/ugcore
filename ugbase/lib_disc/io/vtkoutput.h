@@ -291,6 +291,13 @@ class VTKOutput
 		void print(const char*  filename, TFunction& u,
 		           int step, number time)
 		{
+			//Shuai Debug
+			//if (step%100!=1)
+			//{
+			//	return;
+			//}
+			//Shuai Debug end
+			
 			return print(filename, u, step, time, true);
 		}
 

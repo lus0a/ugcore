@@ -902,7 +902,76 @@ function util.solver.CreatePreconditioner(precondDesc, solverutil)
 		end
 
 		precond = gmg
+	--Shuai debug
+	elseif name == "amg"  then 
+		precond = desc.amg or defaults.amg
+	--[[
+		local smoother =
+				util.solver.CreatePreconditioner(
+					desc.smoother or defaults.smoother, solverutil)
+		
+		local baseSolver = 
+				util.solver.CreateLinearSolver(
+					desc.baseSolver or defaults.baseSolver, solverutil)
 
+		if approxSpace == nil then
+			print("An ApproximationSpace is required to create a 'gmg' solver.")
+			print("Please specify one through the gmg-descriptor (member 'approxSpace')")
+			print("or specify it through util.solver.defaults.approxSpace")
+			exit()
+		end
+
+		local amg = RSAMGPreconditioner()
+		amg:set_base_solver			(baseSolver)
+		amg:set_max_nodes_for_base	(desc.maxBase or defaults.maxBase)
+		amg:set_presmoother 		(smoother)
+		amg:set_postsmoother 		(smoother)
+		--amg:set_base_level			(desc.baseLevel or defaults.baseLevel)
+		amg:set_cycle_type			(desc.cycle or defaults.cycle)
+		amg:set_num_presmooth			(desc.preSmooth or defaults.preSmooth)
+		amg:set_num_postsmooth			(desc.postSmooth or defaults.postSmooth)
+		--amg:set_rap 				(desc.rap or defaults.rap)
+		--amg:set_smooth_on_surface_rim		(desc.rim or defaults.rim)
+		--amg:set_emulate_full_refined_grid	(desc.emulateFullRefined or defaults.emulateFullRefined)
+		--amg:set_gathered_base_solver_if_ambiguous (
+		--		desc.gatheredBaseSolverIfAmbiguous or
+		--		defaults.gatheredBaseSolverIfAmbiguous)
+	----	
+		if (util.debug_writer) then		 -- quickhack
+			gmg:set_debug(util.debug_writer)
+		end
+		if desc.surfaceLevel then
+			gmg:set_surface_level		(desc.surfaceLevel)
+		end
+
+		local transfer = util.solver.CreateTransfer(desc.transfer or defaults.transfer, solverutil)
+		if desc.adaptive == true then
+		--	next three lines are obsolete, since gmg:set_transfer overwrites gmg:set_projection, anyways!?
+			local project = StdTransfer()
+			project:enable_p1_lagrange_optimization(false)
+			gmg:set_projection(project)
+
+			transfer:enable_p1_lagrange_optimization(false)
+		end
+		gmg:set_transfer(transfer)
+
+		--local discretization = desc.discretization or util.solver.defaults.discretization
+		--if discretization then
+		--	gmg:set_discretization(discretization)
+		--end
+
+		local mgStats = util.solver.CreateMGStats(desc.mgStats or defaults.mgStats)
+		if(mgStats) then
+			gmg:set_mg_stats(mgStats)
+		end
+	--]]
+
+		--precond = amg
+		
+		
+		
+	--Shuai Debug end
+	
 	elseif name == "schur" 	then
 		local dirichletSolver =
 				util.solver.CreateLinearSolver(

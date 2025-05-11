@@ -622,7 +622,7 @@ public:
 	typedef IComponentSpace<TGridFunction> base_type;
 	typedef typename H1SemiDistIntegrand<TGridFunction>::weight_type weight_type;
 	typedef IObjectWithWeights<weight_type> weighted_obj_type;
-
+	
 
 	H1SemiComponentSpace(const char *fctNames)
 	: base_type(fctNames), weighted_obj_type(make_sp(new ConstUserMatrix<TGridFunction::dim>(1.0))) {};
@@ -638,7 +638,7 @@ public:
 
 	H1SemiComponentSpace(const char *fctNames, int order, const char* ssNames, ConstSmartPtr<weight_type> spWeight)
 	: base_type(fctNames, ssNames, order), weighted_obj_type(spWeight) {};
-
+	
 	/// DTOR
 	~H1SemiComponentSpace() {};
 

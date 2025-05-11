@@ -189,7 +189,7 @@ print(const char* filename, TFunction& u, int step, number time, bool makeConsis
 		if(!u.change_storage_type(PST_CONSISTENT))
 			UG_THROW("VTK::print: Cannot change storage type to consistent.");
 #endif
-
+	
 //	check functions
 	bool bEverywhere = true;
 	for(size_t fct = 0; fct < u.num_fct(); ++fct)

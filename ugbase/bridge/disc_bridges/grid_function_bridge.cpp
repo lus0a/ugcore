@@ -50,6 +50,7 @@
 #include "lib_disc/function_spaces/grid_function_user_data_explicit.h"
 #include "lib_disc/function_spaces/grid_function_coordinate_util.h"
 #include "lib_disc/function_spaces/metric_spaces.h"
+
 using namespace std;
 
 namespace ug{
@@ -308,7 +309,7 @@ static void DomainAlgebra(Registry& reg, string grp)
 		typedef H1SemiComponentSpace<TFct> T;
 		typedef IComponentSpace<TFct> TBase;
 		typedef typename H1SemiIntegrand<TFct>::weight_type TWeight;
-
+		
 		string name = string("H1SemiComponentSpace").append(suffix);
 		reg.add_class_<T, TBase>(name, grp)
 		   .template add_constructor<void (*)(const char *) >("fctNames")

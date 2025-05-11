@@ -460,10 +460,8 @@ static void Dimension(Registry& reg, string grp)
 			string name = string("CompositeUserNumber").append(dimSuffix);
 			typedef CompositeUserData<number, dim, void> T;
 			reg.add_class_<T,typename T::base_type>(name, grp)
-				.template add_constructor<void (*)()>()
-				.template add_constructor<void (*)(bool)>("continuous")
-				.add_method("add", static_cast<void (T::*)(int, typename T::ref_type)>(&T::add), "assign a user data object to a subset index", "si#userdata")
-				.add_method("add", static_cast<void (T::*)(ConstSmartPtr<ISubsetHandler>, const char *, typename T::ref_type)>(&T::add), "assign a user data object to subsets by names", "names#userdata")
+				.template add_constructor<void (*)(bool) >("")
+				.add_method("add", &T::add)
 				.add_method("has", &T::has)
 				.add_method("get", &T::get)
 				.add_method("is_coupled", &T::is_coupled)
@@ -478,10 +476,8 @@ static void Dimension(Registry& reg, string grp)
 			string name = string("CompositeUserVector").append(dimSuffix);
 			typedef CompositeUserData<MathVector<dim>, dim, void> T;
 			reg.add_class_<T,typename T::base_type>(name, grp)
-				.template add_constructor<void (*)()>()
-				.template add_constructor<void (*)(bool)>("continuous")
-				.add_method("add", static_cast<void (T::*)(int, typename T::ref_type)>(&T::add), "assign a user data object to a subset index", "si#userdata")
-				.add_method("add", static_cast<void (T::*)(ConstSmartPtr<ISubsetHandler>, const char *, typename T::ref_type)>(&T::add), "assign a user data object to subsets by names", "names#userdata")
+				.template add_constructor<void (*)(bool) >("")
+				.add_method("add", &T::add)
 				.add_method("has", &T::has)
 				.add_method("get", &T::get)
 				.add_method("is_coupled", &T::is_coupled)
@@ -511,7 +507,7 @@ static void Dimension(Registry& reg, string grp)
 		string name = string("GlobAttachmentElementNumberData").append(dimSuffix);
 		reg.add_class_<T, TBase>(name, grp)
 			.template add_constructor<void (*)(SmartPtr<Grid>, const char *) >("AttachmentName")
-			//.template add_constructor<void (*)(SmartPtr<Grid>, const char *, int) >("AttachmentName and dimension of attachments")
+			.template add_constructor<void (*)(SmartPtr<Grid>, const char *, int) >("AttachmentName and dimension of attachments")
 			.set_construct_as_smart_pointer(true);
 		reg.add_class_to_group(name, "GlobAttachmentElementNumberData", dimTag);
 	}

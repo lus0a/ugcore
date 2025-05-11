@@ -231,6 +231,14 @@ bool ICplUserData<dim>::at_current_time(size_t s) const
 template <int dim>
 void ICplUserData<dim>::set_global_ips(size_t s, const MathVector<dim>* vPos, size_t numIP)
 {
+/*	//Shuai Debug
+	if (s >= num_series())
+	{
+		int debug_x;
+		debug_x = 0;
+	}
+*/		
+	
 	UG_ASSERT(s < num_series(), "Wrong series id: "<<s<<" (numSeries: "<<num_series()<<")");
 
 //	check number of ips (must match local ip number)
@@ -315,6 +323,14 @@ template <typename TData, int dim, typename TRet>
 inline void CplUserData<TData,dim,TRet>::check_series_ip(size_t s, size_t ip) const
 {
 	check_series(s);
+	
+	//Shuai debug
+	if (ip>=num_ip(s))
+	{
+		int x;
+		x = 0;
+	}
+	
 	UG_ASSERT(ip < num_ip(s), "Invalid index "<<ip);
 	UG_ASSERT(ip < m_vvValue[s].size(), "Invalid index "<<ip);
 }

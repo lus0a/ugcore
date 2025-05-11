@@ -323,12 +323,25 @@ inline void DataImport<TData,dim>::check_ip_fct_sh(size_t ip, size_t fct, size_t
 template <typename TData, int dim>
 inline void DataImport<TData,dim>::check_ip(size_t ip) const
 {
+	//Shuai debug
+	if (ip >= m_numIP)
+	{
+		int x;
+		x = 0;
+	}
+	
 	UG_ASSERT(ip < m_numIP, "Invalid index.");
 }
 
 template <typename TData, int dim>
 inline void DataImport<TData,dim>::check_values() const
 {
+	//Shuai debug
+	if (m_vValue == NULL)
+	{
+		int x;
+		x = 0;
+	}
 	UG_ASSERT(m_vValue != NULL, "Data Value field not set.");
 }
 

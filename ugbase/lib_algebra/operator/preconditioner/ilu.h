@@ -191,11 +191,23 @@ bool FactorizeILUSorted(Matrix_type &A, const number eps = 1e-50)
 			// add row k to row i by A(i, .) -= A(k,.)  A(i,k) / A(k,k)
 			// so that A(i,k) is zero.
 			// safe A(i,k)/A(k,k) in A(i,k)
+			
+			//Shuai Debug
+			/*
 			if(fabs(BlockNorm(A(k,k))) < eps * BlockNorm(A(i,k)))
 				UG_THROW("ILU: Blocknorm of diagonal is near-zero for k="<<k<<
 				         " with eps: "<< eps <<", ||A_kk||="<<fabs(BlockNorm(A(k,k)))
 				         <<", ||A_ik||="<<BlockNorm(A(i,k)));
-
+			*/			 
+			if(fabs(BlockNorm(A(k,k))) < eps * BlockNorm(A(i,k)))
+			{
+				UG_LOG("Shuai Debug:ilu.h \n");
+				UG_THROW("ILU: Blocknorm of diagonal is near-zero for k="<<k<<
+						 " with eps: "<< eps <<", ||A_kk||="<<fabs(BlockNorm(A(k,k)))
+						 <<", ||A_ik||="<<BlockNorm(A(i,k)));
+			}
+			//Shuai debug end
+			
 			try {a_ik /= a_kk;}
 			UG_CATCH_THROW("Failed to calculate A_ik /= A_kk "
 				"with i = " << i << " and k = " << k << ".");

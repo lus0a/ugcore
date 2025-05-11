@@ -1,0 +1,172 @@
+refinement/hanging_node_refiner_multi_grid.h:			cornersOut.resize(elem->num_vertices());
+refinement/hanging_node_refiner_multi_grid.h:			for(size_t i = 0; i < elem->num_vertices(); ++i){
+refinement/hanging_node_refiner_multi_grid.h:				//UG_ASSERT(m_pMG->get_child_vertex(elem->vertex(i)), "A child vertex has to exists!");
+refinement/hanging_node_refiner_multi_grid.h:				cornersOut[i] = m_pMG->get_child_vertex(elem->vertex(i));
+refinement/adaptive_regular_mg_refiner.cpp:			vrts = elem->vertices();
+refinement/adaptive_regular_mg_refiner.cpp:			size_t numVrts = elem->num_vertices();
+refinement/adaptive_regular_mg_refiner.cpp:			if(elem->refine(newFaces, &newFaceVrt, &newEdgeVrts.front(),
+refinement/adaptive_regular_mg_refiner.cpp:			vrts = elem->vertices();
+refinement/adaptive_regular_mg_refiner.cpp:			size_t numVrts = elem->num_vertices();
+refinement/adaptive_regular_mg_refiner.cpp:			if((elem->num_vertices() == 4) && m_projector.valid()){
+refinement/adaptive_regular_mg_refiner.cpp:			if(elem->refine(newVols, &newVolVrt, &newVolEdgeVrts.front(),
+refinement/hanging_node_refiner_multi_grid.cpp:			|| elem->is_constraining();
+refinement/hanging_node_refiner_multi_grid.cpp:			|| elem->is_constraining();
+refinement/hanging_node_refiner_multi_grid.cpp:	switch(elem->base_object_id()){
+refinement/hanging_node_refiner_multi_grid.cpp:				assert(!elem->is_constraining());
+refinement/hanging_node_refiner_multi_grid.cpp:				if(elem->is_constrained()){
+refinement/hanging_node_refiner_multi_grid.cpp:				switch(elem->reference_object_id()){
+refinement/hanging_node_refiner_multi_grid.cpp:				assert(!elem->is_constrained());
+refinement/hanging_node_refiner_multi_grid.cpp:				if(elem->is_constraining()){
+refinement/hanging_node_refiner_multi_grid.cpp:					switch(elem->reference_object_id()){
+refinement/hanging_node_refiner_multi_grid.cpp:					switch(elem->reference_object_id()){
+refinement/hanging_node_refiner_multi_grid.cpp:				assert(!elem->is_constraining());
+refinement/hanging_node_refiner_multi_grid.cpp:				if(elem->is_constrained()){
+refinement/hanging_node_refiner_multi_grid.cpp:				UG_ASSERT(!elem->is_constrained(), "RegularEdge should not be constrained: "
+refinement/hanging_node_refiner_multi_grid.cpp:				if(elem->is_constraining()){
+refinement/hanging_node_refiner_multi_grid.cpp:				if(elem->is_constrained()){
+multi_grid.cpp://	attach elem-infos
+algorithms/debug_util.cpp:						UG_LOG("  PARENT-TYPE MISMATCH AT CHILD ELEMENT WITH OBJECT ID " << elem->base_object_id()
+algorithms/debug_util.cpp:						UG_LOG("  PARENT-TYPE MISMATCH AT CHILD ELEMENT WITH OBJECT ID " << elem->base_object_id()
+algorithms/debug_util.cpp:					UG_LOG("  PARENT-TYPE MISMATCH AT ELEMENT WITH OBJECT ID " << elem->base_object_id()
+algorithms/deg_layer_mngr_impl.h:				for (size_t i = 0; i < elem->num_vertices (); i++)
+algorithms/deg_layer_mngr_impl.h:					Vertex * vert = elem->vertex(i);
+algorithms/deg_layer_mngr_impl.h:				for (size_t i = 0; i < elem->num_vertices (); i++)
+algorithms/deg_layer_mngr_impl.h:					m_aaVertMarks [elem->vertex(i)] = D_LAYER_OUTER;
+algorithms/deg_layer_mngr_impl.h:	size_t n_co = elem->num_vertices ();
+algorithms/deg_layer_mngr_impl.h:	for (size_t i = 0; i < elem->num_sides (); i++)
+algorithms/deg_layer_mngr_impl.h:		Vertex * vrt = elem->vertex (co);
+algorithms/geom_obj_util/misc_util_impl.hpp:	switch(elem->base_object_id()){
+algorithms/trees/octree_impl.hpp:			Vertex* v = elem->vertex(i);
+algorithms/debug_util_impl.hpp:	switch(elem->base_object_id()){
+algorithms/subset_util_impl.hpp:			for(uint i = 0; i < elem->num_sides(); ++i)
+algorithms/subset_util_impl.hpp:		uint numVrts = elem->num_vertices();
+algorithms/subset_util_impl.hpp:			sh.assign_subset(elem->vertex(i), subsetIndex);
+algorithms/element_side_util.cpp:	elem->get_opposing_side(side, fd);
+algorithms/element_side_util.cpp:	elem->get_opposing_side(side, ed);
+algorithms/element_side_util.cpp:	elem->get_opposing_side(side, &out);
+algorithms/volume_calculation_impl.hpp:	switch (elem->reference_object_id()) {
+algorithms/volume_calculation_impl.hpp:	return CalculateTetrahedronVolume(aaPos[elem->vertex(0)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(1)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(2)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(3)]);
+algorithms/volume_calculation_impl.hpp:	return CalculatePyramidVolume(aaPos[elem->vertex(0)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(1)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(2)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(3)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(4)]);
+algorithms/volume_calculation_impl.hpp:	return CalculatePrismVolume(aaPos[elem->vertex(0)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(1)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(2)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(3)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(4)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(5)]);
+algorithms/volume_calculation_impl.hpp:	return CalculateHexahedronVolume(aaPos[elem->vertex(0)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(1)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(2)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(3)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(4)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(5)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(6)],
+algorithms/volume_calculation_impl.hpp:									aaPos[elem->vertex(7)]);
+algorithms/volume_calculation_impl.hpp:	return CalculateOctahedronVolume(aaPos[elem->vertex(0)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(1)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(2)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(3)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(4)],
+algorithms/volume_calculation_impl.hpp:								aaPos[elem->vertex(5)]);
+parallelization/deprecated/load_balancing_impl.hpp://	fill a kd-tree with the vertices. This will help to find the elem-partition later on.
+parallelization/parallel_refinement/parallel_hanging_node_refiner_multi_grid.cpp:						if(elem->is_constraining() || elem->is_constrained()){
+parallelization/parallel_refinement/parallel_hanging_node_refiner_multi_grid.cpp:						if(!elem->is_constraining()){
+parallelization/parallel_refinement/parallel_hanging_node_refiner_multi_grid.cpp:						if(!elem->is_constrained()){
+file_io/file_io_ng.cpp:			switch(elem->num_nodes)
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[0]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[1]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[2]]));
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[0]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[1]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[2]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[3]]));
+file_io/file_io_ng.cpp:				pSubdomainHandler->assign_subset(face, elem->subdomain - 1);
+file_io/file_io_ng.cpp:			switch(elem->num_nodes)
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[0]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[1]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[2]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[3]]
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[0]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[1]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[2]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[3]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[4]]));
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[0]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[1]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[2]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[3]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[4]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[5]]));
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[0]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[1]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[2]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[3]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[4]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[5]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[6]],
+file_io/file_io_ng.cpp:							vVertices[elem->nodes[7]]));
+file_io/file_io_ng.cpp:				pSubdomainHandler->assign_subset(vol, elem->subdomain - 1);
+grid/element_storage.h:		static inline uint get_data_index(ConstElemHandlerPtr pHandler, ConstElemPtr elem)	{return elem->grid_data_index();}
+grid/element_storage.h:		static inline void set_data_index(ElemHandlerPtr pHandler, ElemPtr elem, uint index){elem->set_grid_data_index(index);}
+grid/element_storage.h:		static inline uint get_data_index(ConstElemHandlerPtr pHandler, ConstElemPtr elem)	{return elem->grid_data_index();}
+grid/element_storage.h:		static inline void set_data_index(ElemHandlerPtr pHandler, ElemPtr elem, uint index){elem->set_grid_data_index(index);}
+grid/element_storage.h:		static inline uint get_data_index(ConstElemHandlerPtr pHandler, ConstElemPtr elem)	{return elem->grid_data_index();}
+grid/element_storage.h:		static inline void set_data_index(ElemHandlerPtr pHandler, ElemPtr elem, uint index){elem->set_grid_data_index(index);}
+grid/element_storage.h:		static inline uint get_data_index(ConstElemHandlerPtr pHandler, ConstElemPtr elem)	{return elem->grid_data_index();}
+grid/element_storage.h:		static inline void set_data_index(ElemHandlerPtr pHandler, ElemPtr elem, uint index){elem->set_grid_data_index(index);}
+grid/grid_util.cpp:	size_t n = elem->num_vertices();
+grid/grid_util.cpp:	size_t numVrts = elem->num_vertices();
+grid/grid_util.cpp:	IVertexGroup::ConstVertexArray vrts1 = elem->vertices();
+grid/neighborhood_util.cpp:	UG_COND_THROW(el_sz > 2, "More than two " << elem->reference_object_id()
+grid/grid_util_impl.hpp:	return elem->num_vertices();
+grid/grid_util_impl.hpp:	return elem->num_vertices();
+grid/grid_util_impl.hpp:	return elem->num_vertices();
+grid/grid.cpp:	std::pair<GridBaseObjectId, int> id = elem->get_opposing_object(vrt);
+grid/grid.cpp:			return elem->vertex(id.second);
+grid/grid.cpp:	std::pair<GridBaseObjectId, int> id = elem->get_opposing_object(vrt);
+grid/grid.cpp:			return elem->vertex(id.second);
+multi_grid_impl.hpp:	int sharedPipeSec = elem->container_section();
+multi_grid_impl.hpp:	switch(elem->base_object_id()){
+multi_grid_impl.hpp:	switch(elem->base_object_id()){
+multi_grid_impl.hpp:	if(elem->base_object_id() > parent->base_object_id()){
+tools/subset_handler_grid.cpp:		section_container<TElem>(oldIndex).erase(get_list_iterator(elem), elem->container_section());
+tools/subset_handler_grid.cpp:		section_container<TElem>(subsetIndex).insert(elem, elem->container_section());
+tools/selector_multi_grid.cpp:								elem->container_section());
+tools/selector_multi_grid.cpp:								elem->container_section());
+tools/selector_multi_grid.cpp:								elem->container_section());
+tools/selector_multi_grid.cpp:								elem->container_section());
+tools/selector_multi_grid.cpp:						elem->container_section());
+tools/selector_multi_grid.cpp:						elem->container_section());
+tools/selector_multi_grid.cpp:						elem->container_section());
+tools/selector_multi_grid.cpp:						elem->container_section());
+tools/periodic_boundary_manager.cpp:						 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:						 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:						 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:						 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:						 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:					 		 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:					 		 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:					 		 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/periodic_boundary_manager.cpp:					 << "  elem-info: " << ElementDebugInfo(g, e));
+tools/selector_grid.cpp:								elem->container_section());
+tools/selector_grid.cpp:								elem->container_section());
+tools/selector_grid.cpp:								elem->container_section());
+tools/selector_grid.cpp:								elem->container_section());
+tools/selector_grid.cpp:						elem->container_section());
+tools/selector_grid.cpp:						elem->container_section());
+tools/selector_grid.cpp:						elem->container_section());
+tools/selector_grid.cpp:						elem->container_section());
+tools/subset_handler_multi_grid.cpp:		section_container<TElem>(oldIndex, level).erase(get_list_iterator(elem), elem->container_section());
+tools/subset_handler_multi_grid.cpp:		section_container<TElem>(subsetIndex, level).insert(elem, elem->container_section());
+tools/selector_interface_impl.hpp:	int elemID = elem->base_object_id();
+tools/selector_interface_impl.hpp:	int elemID = elem->base_object_id();
+tools/selector_interface_impl.hpp:	int elemID = elem->base_object_id();
+tools/subset_handler_interface.cpp:	switch(elem->base_object_id()){
+tools/subset_handler_interface.cpp:			UG_THROW("Unsupported base-object-id encountered: " << elem->base_object_id());
+tools/subset_handler_interface.cpp:	uint type = elem->base_object_id();

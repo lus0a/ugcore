@@ -1943,6 +1943,7 @@ class H1SemiIntegrand
 	public:
 	///	world dimension of grid function
 		static const int worldDim = TGridFunction::dim;
+
 		typedef UserData<MathMatrix<worldDim, worldDim>, worldDim> weight_type;
 
 	protected:

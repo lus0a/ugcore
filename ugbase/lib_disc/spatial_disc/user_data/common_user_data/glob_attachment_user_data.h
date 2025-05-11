@@ -49,7 +49,7 @@ class GlobAttachmentElementUserData
 {
 		static const int dim = WDim;
 		typedef TData data_type;
-		typedef typename grid_dim_traits<dim>::grid_base_object elem_type;
+		typedef typename grid_dim_traits<dim>::grid_base_object elem_type; //Face_type in 2D, Volume_type in 3D
 		//typedef typename geometry_traits<Face>::grid_base_object Face_type;
 		//typedef typename geometry_traits<Edge>::grid_base_object Edge_type;
 		typedef typename geometry_traits<Vertex>::grid_base_object Vertex_type;
@@ -59,7 +59,9 @@ class GlobAttachmentElementUserData
 		std::string m_attachment_name;
 		SmartPtr<Grid> m_spGrid;
 		attachment_type m_att;
-		int m_dim_of_att = dim;
+		
+		byte m_dim_of_att =0;
+		
 		Grid::AttachmentAccessor<elem_type, attachment_type> m_aatt;
 		//Grid::AttachmentAccessor<Face_type, attachment_type> m_Face_aatt;
 		//Grid::AttachmentAccessor<Edge_type, attachment_type> m_Edge_aatt;
@@ -73,11 +75,11 @@ class GlobAttachmentElementUserData
 			data_type vValue []  ///< array for the values
 		) const
 		{
-			if ( m_dim_of_att == dim ){
+			if ( m_dim_of_att & 1<<dim ){
 				for (size_t ip = 0; ip < nip; ++ip)
 					vValue[ip] = m_aatt [elem];
 			}
-			else if ( m_dim_of_att == 0){
+			else if ( m_dim_of_att & 1){
 				if (elem->num_vertices() != nip){
 					UG_THROW ("GlobAttachmentElementUserData::eval_on_elem: The number of vertices inconsistent.");
 				}
@@ -88,6 +90,30 @@ class GlobAttachmentElementUserData
 					}
 				}
 			}
+			/*
+			else if ( (dim >1)&&( m_dim_of_att & 1<<1 ) ){
+				if (elem->num_edges() != nip){
+					UG_THROW ("GlobAttachmentElementUserData::eval_on_elem: The number of edges inconsistent.");
+				}
+				else{
+					elem_type* Ele = (elem_type *) elem;
+					for (size_t ip = 0; ip < nip; ++ip){
+						vValue[ip] = m_Edge_aatt[Ele->edge_desc(ip)];
+					}
+				}
+			}
+			else if ( (dim >2)&&( m_dim_of_att & 1<<2) ){
+				if (elem->num_faces() != nip){
+					UG_THROW ("GlobAttachmentElementUserData::eval_on_elem: The number of faces inconsistent.");
+				}
+				else{
+					elem_type* Ele = (elem_type *) elem;
+					for (size_t ip = 0; ip < nip; ++ip){
+						vValue[ip] = m_Face_aatt[Ele->face(ip)];
+					}
+				}
+			}
+			*/
 		}
 /*		
 		///	Evalutation of the attachment in one element
@@ -130,31 +156,41 @@ class GlobAttachmentElementUserData
 	
 	/// constructor
 		GlobAttachmentElementUserData(SmartPtr<Grid> grid, const char* name, const int dim_of_att = dim)
-		:	m_attachment_name(name), m_spGrid(grid), m_dim_of_att(dim_of_att)
+		:	m_attachment_name(name), m_spGrid(grid)//, m_dim_of_att(dim_of_att)
 		{
 			if (! GlobalAttachments::is_declared (m_attachment_name)) 
 				UG_THROW ("GlobAttachmentElementUserData: No global attachment '" << m_attachment_name << "' found.");
 			
+			//Check the dimention of the attachment
+			if(GlobalAttachments::is_attached<Vertex>(*grid, m_attachment_name))
+				m_dim_of_att |= 1;
+			if(GlobalAttachments::is_attached<Edge>(*grid, m_attachment_name))
+				m_dim_of_att |= 1<<1;
+			if(GlobalAttachments::is_attached<Face>(*grid, m_attachment_name))
+				m_dim_of_att |= 1<<2;
+			if(GlobalAttachments::is_attached<Volume>(*grid, m_attachment_name))
+				m_dim_of_att |= 1<<3;
+			
 			m_att = GlobalAttachments::attachment<attachment_type> (m_attachment_name);
-			if (m_dim_of_att > dim){
-				UG_THROW ("GlobAttachmentElementUserData: '" << m_dim_of_att << "'d global attachment is not support on '"<< dim <<"'d elements");
-			}	
-			else if ( m_dim_of_att == dim ){
+			if ( m_dim_of_att & 1<<dim ){
 				m_aatt.access (*grid, m_att);
 			}
-			else if ( m_dim_of_att == 0){
+			else if ( m_dim_of_att & 1){
 				m_Vertex_aatt.access (*grid, m_att);
 			}
+			
+			/*
+			else if ( m_dim_of_att & 1<<1){
+				m_Edge_aatt.access (*grid, m_att);
+			}
+			else if ( m_dim_of_att & 1<<2){
+				m_Face_aatt.access (*grid, m_att);
+			}
+			*/
 			else{
 				UG_THROW ("GlobAttachmentElementUserData: '" << m_dim_of_att << "'d global attachment is not support on '"<< dim <<"'d elements");
 			}
-				
-			/*
-			if else ( m_dim_of_att == 2)
-				m_Face_aatt.access (*grid, m_att);
-			if else  ( m_dim_of_att == 1)
-				m_Edge_aatt.access (*grid, m_att);
-			*/	
+
 		};
 	
 	//	UserData interface

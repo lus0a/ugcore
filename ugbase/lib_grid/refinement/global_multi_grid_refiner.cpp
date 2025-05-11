@@ -36,6 +36,12 @@
 #include "lib_grid/algorithms/algorithms.h"
 #include "lib_grid/file_io/file_io.h"
 
+//Shuai
+#include "lib_grid/global_attachments.h"
+#ifdef UG_PARALLEL
+#include "lib_grid/parallelization/util/attachment_operations.hpp"
+#endif
+
 //define PROFILE_GLOBAL_MULTI_GRID_REFINER if you want to profile
 //the refinement code.
 #define PROFILE_GLOBAL_MULTI_GRID_REFINER
@@ -364,7 +370,8 @@ void GlobalMultiGridRefiner::perform_refinement()
 		//	register the new faces and assign status
 			for(size_t j = 0; j < vFaces.size(); ++j)
 				mg.register_element(vFaces[j], f);
-		}
+			
+		}	
 		else{
 			LOG("  WARNING in Refine: could not refine face.\n");
 		}
@@ -459,6 +466,682 @@ void GlobalMultiGridRefiner::perform_refinement()
 													mg.get_grid_objects(oldTopLevel)));
 
 	UG_DLOG(LIB_GRID, 1, "  refinement done.");
+		
+	//Shuai
+	// assign attachments to the new grid level
+	bool bPERM = GlobalAttachments::is_declared("PERM") && ( GlobalAttachments::is_attached<Face>(mg, "PERM") || GlobalAttachments::is_attached<Volume>(mg, "PERM") );
+	bool bPORO = GlobalAttachments::is_declared("PORO") && ( GlobalAttachments::is_attached<Face>(mg, "PORO") || GlobalAttachments::is_attached<Volume>(mg, "PORO") );
+	bool bPD = GlobalAttachments::is_declared("PD") && ( GlobalAttachments::is_attached<Face>(mg, "PD") || GlobalAttachments::is_attached<Volume>(mg, "PD") );
+	bool bSwr = GlobalAttachments::is_declared("Swr") && ( GlobalAttachments::is_attached<Face>(mg, "Swr") || GlobalAttachments::is_attached<Volume>(mg, "Swr") );
+	bool bSnr = GlobalAttachments::is_declared("Snr") && ( GlobalAttachments::is_attached<Face>(mg, "Snr") || GlobalAttachments::is_attached<Volume>(mg, "Snr") );
+	bool bLambda = GlobalAttachments::is_declared("Lambda") && ( GlobalAttachments::is_attached<Face>(mg, "Lambda") || GlobalAttachments::is_attached<Volume>(mg, "Lambda") );
+	
+if(mg.num_volumes() > 0){
+	typedef typename grid_dim_traits<3>::grid_base_object elem_type;
+	typedef ElementStorage<elem_type>::SectionContainer::iterator	ElemIterator;
+
+	if ( bPERM )
+	{	
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("PERM");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+		
+	}
+	
+	if ( bPORO )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("PORO");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+		
+	}
+	
+	if ( bPD )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("PD");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+		
+	}
+	
+	if ( bSwr )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("Swr");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+		
+	}
+	
+	if ( bSnr )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("Snr");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+		
+	}
+	
+	if ( bLambda )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("Lambda");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+		
+	}
+	
+	
+	// if PERM, PORO and PD are attched, creat minPD depends on PD
+	if ( bPERM && bPORO && bPD )
+	{	
+		ANumber aPERMs = GlobalAttachments::attachment<ANumber>("PERM");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPERMs;
+		aaPERMs.access (mg, aPERMs);
+		ANumber aPOROs = GlobalAttachments::attachment<ANumber>("PORO");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPOROs;
+		aaPOROs.access (mg, aPOROs);
+		ANumber aPDs = GlobalAttachments::attachment<ANumber>("PD");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPDs;
+		aaPDs.access (mg, aPDs);
+		ANumber aminPDs = GlobalAttachments::attachment<ANumber>("minPD");
+		Grid::VertexAttachmentAccessor<ANumber> aaminPDs(mg, aminPDs);
+		//Swr, Snr, Lambda on the element with minPd are needed
+		ANumber aSwrs = GlobalAttachments::attachment<ANumber>("Swr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSwrs;
+		aaSwrs.access (mg, aSwrs);
+		ANumber aSnrs = GlobalAttachments::attachment<ANumber>("Snr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSnrs;
+		aaSnrs.access (mg, aSnrs);
+		ANumber aLambdas = GlobalAttachments::attachment<ANumber>("Lambda");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaLambdas;
+		aaLambdas.access (mg, aLambdas);
+		ANumber aminSwrs = GlobalAttachments::attachment<ANumber>("minSwr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSwrs(mg, aminSwrs);
+		ANumber aminSnrs = GlobalAttachments::attachment<ANumber>("minSnr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSnrs(mg, aminSnrs);
+		ANumber aminLambdas = GlobalAttachments::attachment<ANumber>("minLambda");
+		Grid::VertexAttachmentAccessor<ANumber> aaminLambdas(mg, aminLambdas);
+		
+		typedef std::vector<elem_type*>::iterator AssociatedElemIterator;
+		
+		// it happens only after the first refinement
+		if (oldTopLevel == 0){
+			// create minPD for the first level
+			for(VertexIterator Vertexiter = mg.begin<Vertex>(0);
+				Vertexiter != mg.end<Vertex>(0); ++Vertexiter)
+			{
+				double minPD = pow(10,10);
+				double PD = 0;
+				double minSwr = 0;
+				double minSnr = 0;
+				double minLambda = 0;
+				// get associated volumes
+				for(AssociatedElemIterator Elemiter = mg.associated_volumes_begin(*Vertexiter);
+						Elemiter != mg.associated_volumes_end(*Vertexiter); ++Elemiter)
+				{
+					PD = aaPDs[*Elemiter];
+					
+					if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+						
+				}
+				aaminPDs[*Vertexiter] = minPD;
+				aaminSwrs[*Vertexiter] = minSwr;
+				aaminSnrs[*Vertexiter] = minSnr;
+				aaminLambdas[*Vertexiter] = minLambda;
+			}
+		}	
+		
+		for(VertexIterator Vertexiter = mg.begin<Vertex>(oldTopLevel+1);
+			Vertexiter != mg.end<Vertex>(oldTopLevel+1); ++Vertexiter)
+		{	
+			double minPD = pow(10,10);
+			double PD = 0;
+			double minSwr = 0;
+			double minSnr = 0;
+			double minLambda = 0;
+			// get associated volumes
+			for(AssociatedElemIterator Elemiter = mg.associated_volumes_begin(*Vertexiter);
+					Elemiter != mg.associated_volumes_end(*Vertexiter); ++Elemiter)
+			{
+				PD = aaPDs[*Elemiter];
+
+				if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+			}
+			aaminPDs[*Vertexiter] = minPD;
+			aaminSwrs[*Vertexiter] = minSwr;
+			aaminSnrs[*Vertexiter] = minSnr;
+			aaminLambdas[*Vertexiter] = minLambda;
+	
+		}
+		#	ifdef UG_PARALLEL
+			AttachmentAllReduce<Vertex> (mg, aminPDs, PCL_RO_MIN);
+		#	endif
+	}
+	// if PERM and PORO are attched, creat minPD depends on PERM and PORO
+	else if ( bPERM && bPORO )
+	{	
+		ANumber aPERMs = GlobalAttachments::attachment<ANumber>("PERM");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPERMs;
+		aaPERMs.access (mg, aPERMs);
+		ANumber aPOROs = GlobalAttachments::attachment<ANumber>("PORO");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPOROs;
+		aaPOROs.access (mg, aPOROs);
+		ANumber aminPDs = GlobalAttachments::attachment<ANumber>("minPD");
+		Grid::VertexAttachmentAccessor<ANumber> aaminPDs(mg, aminPDs);
+		
+		//Swr, Snr, Lambda on the element with minPd are needed
+		ANumber aSwrs = GlobalAttachments::attachment<ANumber>("Swr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSwrs;
+		aaSwrs.access (mg, aSwrs);
+		ANumber aSnrs = GlobalAttachments::attachment<ANumber>("Snr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSnrs;
+		aaSnrs.access (mg, aSnrs);
+		ANumber aLambdas = GlobalAttachments::attachment<ANumber>("Lambda");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaLambdas;
+		aaLambdas.access (mg, aLambdas);
+		ANumber aminSwrs = GlobalAttachments::attachment<ANumber>("minSwr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSwrs(mg, aminSwrs);
+		ANumber aminSnrs = GlobalAttachments::attachment<ANumber>("minSnr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSnrs(mg, aminSnrs);
+		ANumber aminLambdas = GlobalAttachments::attachment<ANumber>("minLambda");
+		Grid::VertexAttachmentAccessor<ANumber> aaminLambdas(mg, aminLambdas);
+		
+		typedef std::vector<elem_type*>::iterator AssociatedElemIterator;
+		
+		// it happens only after the first refinement
+		if (oldTopLevel == 0){
+			// create minPD for the first level
+			for(VertexIterator Vertexiter = mg.begin<Vertex>(0);
+				Vertexiter != mg.end<Vertex>(0); ++Vertexiter)
+			{
+				double minPD = pow(10,10);
+				double PD = 0;
+				double minSwr = 0;
+				double minSnr = 0;
+				double minLambda = 0;
+				// get associated volumes
+				for(AssociatedElemIterator Elemiter = mg.associated_volumes_begin(*Vertexiter);
+						Elemiter != mg.associated_volumes_end(*Vertexiter); ++Elemiter)
+				{
+
+					//PD = 0.01*7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+					
+					//PD = 7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+					PD = 0.0;
+					
+					//PD = 7.37*pow(1/aaPERMs[*Elemiter],0.43);
+					
+					if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+				}
+				aaminPDs[*Vertexiter] = minPD;
+				aaminSwrs[*Vertexiter] = minSwr;
+				aaminSnrs[*Vertexiter] = minSnr;
+				aaminLambdas[*Vertexiter] = minLambda;
+			}
+		}	
+		
+		for(VertexIterator Vertexiter = mg.begin<Vertex>(oldTopLevel+1);
+			Vertexiter != mg.end<Vertex>(oldTopLevel+1); ++Vertexiter)
+		{	
+			double minPD = pow(10,10);
+			double PD = 0;
+			double minSwr = 0;
+			double minSnr = 0;
+			double minLambda = 0;
+			// get associated volumes
+			for(AssociatedElemIterator Elemiter = mg.associated_volumes_begin(*Vertexiter);
+					Elemiter != mg.associated_volumes_end(*Vertexiter); ++Elemiter)
+			{
+
+				//PD = 0.01*7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+					
+				//PD = 7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+				PD = 0.0;
+					
+				//PD = 7.37*pow(1/aaPERMs[*Elemiter],0.43);
+
+				if ( minPD > PD )
+				{
+					minPD = PD;
+					minSwr = aaSwrs[*Elemiter];
+					minSnr = aaSnrs[*Elemiter];
+					minLambda = aaLambdas[*Elemiter];
+				}
+			}
+			aaminPDs[*Vertexiter] = minPD;
+			aaminSwrs[*Vertexiter] = minSwr;
+			aaminSnrs[*Vertexiter] = minSnr;
+			aaminLambdas[*Vertexiter] = minLambda;
+	
+		}
+		#	ifdef UG_PARALLEL
+			AttachmentAllReduce<Vertex> (mg, aminPDs, PCL_RO_MIN);
+		#	endif
+	}
+}
+else{
+		typedef typename grid_dim_traits<2>::grid_base_object elem_type;
+		typedef ElementStorage<elem_type>::SectionContainer::iterator	ElemIterator;
+
+	if ( bPERM )
+	{	
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("PERM");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+	}
+	
+	if ( bPORO )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("PORO");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+	}
+	
+	
+	if ( bPD )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("PD");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+	}
+	
+	if ( bSwr )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("Swr");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+	}
+	
+	if ( bSnr )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("Snr");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}
+	}
+	
+	if ( bLambda )
+	{
+		//assign face attachment value on the new level by looping all the refined face on oldTopLevel
+		ANumber aVols = GlobalAttachments::attachment<ANumber>("Lambda");
+		//Grid::FaceAttachmentAccessor<ANumber> aaVols(mg, aVols);
+		Grid::AttachmentAccessor<elem_type, ANumber> aaVols;
+		aaVols.access (mg, aVols);
+		//ElemIterator NewelemIter = mg.begin<elem_type>(oldTopLevel+1);
+		for(ElemIterator iter = mg.begin<elem_type>(oldTopLevel);
+			iter != mg.end<elem_type>(oldTopLevel); ++iter)
+		{
+			if(!refinement_is_allowed(*iter))
+			continue;
+			for (size_t i_child = 0; i_child < mg.num_children<elem_type>(*iter); ++i_child)
+			{
+				aaVols[mg.get_child<elem_type>(*iter, i_child)] = aaVols[*iter];
+			}
+		}	
+	}
+	
+
+		// if PERM, PORO and PD are attched, creat minPD depends on PD
+	if ( bPERM && bPORO && bPD)
+	{	
+		ANumber aPERMs = GlobalAttachments::attachment<ANumber>("PERM");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPERMs;
+		aaPERMs.access (mg, aPERMs);
+		ANumber aPOROs = GlobalAttachments::attachment<ANumber>("PORO");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPOROs;
+		aaPOROs.access (mg, aPOROs);
+		ANumber aPDs = GlobalAttachments::attachment<ANumber>("PD");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPDs;
+		aaPDs.access (mg, aPDs);
+		ANumber aminPDs = GlobalAttachments::attachment<ANumber>("minPD");
+		Grid::VertexAttachmentAccessor<ANumber> aaminPDs(mg, aminPDs);
+		
+		//Swr, Snr, Lambda on the element with minPd are needed
+		ANumber aSwrs = GlobalAttachments::attachment<ANumber>("Swr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSwrs;
+		aaSwrs.access (mg, aSwrs);
+		ANumber aSnrs = GlobalAttachments::attachment<ANumber>("Snr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSnrs;
+		aaSnrs.access (mg, aSnrs);
+		ANumber aLambdas = GlobalAttachments::attachment<ANumber>("Lambda");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaLambdas;
+		aaLambdas.access (mg, aLambdas);
+		ANumber aminSwrs = GlobalAttachments::attachment<ANumber>("minSwr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSwrs(mg, aminSwrs);
+		ANumber aminSnrs = GlobalAttachments::attachment<ANumber>("minSnr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSnrs(mg, aminSnrs);
+		ANumber aminLambdas = GlobalAttachments::attachment<ANumber>("minLambda");
+		Grid::VertexAttachmentAccessor<ANumber> aaminLambdas(mg, aminLambdas);
+		
+		typedef std::vector<elem_type*>::iterator AssociatedElemIterator;
+		
+		// it happens only after the first refinement
+		if (oldTopLevel == 0){
+			// create minPD for the first level
+			for(VertexIterator Vertexiter = mg.begin<Vertex>(0);
+				Vertexiter != mg.end<Vertex>(0); ++Vertexiter)
+			{
+				double minPD = pow(10,10);
+				double PD = 0;
+				double minSwr = 0;
+				double minSnr = 0;
+				double minLambda = 0;
+				// get associated faces
+				for(AssociatedElemIterator Elemiter = mg.associated_faces_begin(*Vertexiter); 
+						Elemiter != mg.associated_faces_end(*Vertexiter); ++Elemiter)
+				{
+					PD = aaPDs[*Elemiter];
+					
+					if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+				}
+				aaminPDs[*Vertexiter] = minPD;
+				aaminSwrs[*Vertexiter] = minSwr;
+				aaminSnrs[*Vertexiter] = minSnr;
+				aaminLambdas[*Vertexiter] = minLambda;
+			}
+		}	
+		
+		for(VertexIterator Vertexiter = mg.begin<Vertex>(oldTopLevel+1);
+			Vertexiter != mg.end<Vertex>(oldTopLevel+1); ++Vertexiter)
+		{	
+			double minPD = pow(10,10);
+			double PD = 0;
+			double minSwr = 0;
+			double minSnr = 0;
+			double minLambda = 0;
+			// get associated faces
+			for(AssociatedElemIterator Elemiter = mg.associated_faces_begin(*Vertexiter); 
+						Elemiter != mg.associated_faces_end(*Vertexiter); ++Elemiter)
+			{
+				PD = aaPDs[*Elemiter];
+				
+				if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+			}
+			aaminPDs[*Vertexiter] = minPD;
+			aaminSwrs[*Vertexiter] = minSwr;
+			aaminSnrs[*Vertexiter] = minSnr;
+			aaminLambdas[*Vertexiter] = minLambda;
+	
+		}
+		#	ifdef UG_PARALLEL
+			AttachmentAllReduce<Vertex> (mg, aminPDs, PCL_RO_MIN);
+		#	endif
+	}
+	// if PERM and PORO are attched, creat minPD depends on PERM and PORO
+	else if ( bPERM && bPORO )
+	{	
+		ANumber aPERMs = GlobalAttachments::attachment<ANumber>("PERM");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPERMs;
+		aaPERMs.access (mg, aPERMs);
+		ANumber aPOROs = GlobalAttachments::attachment<ANumber>("PORO");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaPOROs;
+		aaPOROs.access (mg, aPOROs);
+		ANumber aminPDs = GlobalAttachments::attachment<ANumber>("minPD");
+		Grid::VertexAttachmentAccessor<ANumber> aaminPDs(mg, aminPDs);
+		
+		//Swr, Snr, Lambda on the element with minPd are needed
+		ANumber aSwrs = GlobalAttachments::attachment<ANumber>("Swr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSwrs;
+		aaSwrs.access (mg, aSwrs);
+		ANumber aSnrs = GlobalAttachments::attachment<ANumber>("Snr");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaSnrs;
+		aaSnrs.access (mg, aSnrs);
+		ANumber aLambdas = GlobalAttachments::attachment<ANumber>("Lambda");
+		Grid::AttachmentAccessor<elem_type, ANumber> aaLambdas;
+		aaLambdas.access (mg, aLambdas);
+		ANumber aminSwrs = GlobalAttachments::attachment<ANumber>("minSwr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSwrs(mg, aminSwrs);
+		ANumber aminSnrs = GlobalAttachments::attachment<ANumber>("minSnr");
+		Grid::VertexAttachmentAccessor<ANumber> aaminSnrs(mg, aminSnrs);
+		ANumber aminLambdas = GlobalAttachments::attachment<ANumber>("minLambda");
+		Grid::VertexAttachmentAccessor<ANumber> aaminLambdas(mg, aminLambdas);
+		
+		typedef std::vector<elem_type*>::iterator AssociatedElemIterator;
+		
+		// it happens only after the first refinement
+		if (oldTopLevel == 0){
+			// create minPD for the first level
+			for(VertexIterator Vertexiter = mg.begin<Vertex>(0);
+				Vertexiter != mg.end<Vertex>(0); ++Vertexiter)
+			{
+				double minPD = pow(10,10);
+				double PD = 0;
+				double minSwr = 0;
+				double minSnr = 0;
+				double minLambda = 0;
+				// get associated faces
+				for(AssociatedElemIterator Elemiter = mg.associated_faces_begin(*Vertexiter); 
+						Elemiter != mg.associated_faces_end(*Vertexiter); ++Elemiter)
+				{
+					//PD = 0.01*7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+					
+					//PD = 7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+					PD = 0.0;
+					
+					//PD = 7.37*pow(1/aaPERMs[*Elemiter],0.43);
+					if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+				}
+				aaminPDs[*Vertexiter] = minPD;
+				aaminSwrs[*Vertexiter] = minSwr;
+				aaminSnrs[*Vertexiter] = minSnr;
+				aaminLambdas[*Vertexiter] = minLambda;
+			}
+		}	
+		
+		for(VertexIterator Vertexiter = mg.begin<Vertex>(oldTopLevel+1);
+			Vertexiter != mg.end<Vertex>(oldTopLevel+1); ++Vertexiter)
+		{	
+			double minPD = pow(10,10);
+			double PD = 0;
+			double minSwr = 0;
+			double minSnr = 0;
+			double minLambda = 0;
+			// get associated faces
+			for(AssociatedElemIterator Elemiter = mg.associated_faces_begin(*Vertexiter); 
+						Elemiter != mg.associated_faces_end(*Vertexiter); ++Elemiter)
+			{
+				//PD = 0.01*7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+				
+				//PD = 7.37*pow(aaPOROs[*Elemiter]/aaPERMs[*Elemiter],0.43);
+				PD = 0.0;
+					
+				//PD = 7.37*pow(1/aaPERMs[*Elemiter],0.43);
+				if ( minPD > PD )
+					{
+						minPD = PD;
+						minSwr = aaSwrs[*Elemiter];
+						minSnr = aaSnrs[*Elemiter];
+						minLambda = aaLambdas[*Elemiter];
+					}
+			}
+			aaminPDs[*Vertexiter] = minPD;
+			aaminSwrs[*Vertexiter] = minSwr;
+			aaminSnrs[*Vertexiter] = minSnr;
+			aaminLambdas[*Vertexiter] = minLambda;
+	
+		}
+		#	ifdef UG_PARALLEL
+			AttachmentAllReduce<Vertex> (mg, aminPDs, PCL_RO_MIN);
+		#	endif
+	}
+}
+	
 }
 
 bool GlobalMultiGridRefiner::save_marks_to_file(const char* filename)
